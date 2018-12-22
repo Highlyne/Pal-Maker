@@ -1,0 +1,72 @@
+
+body, html {
+  height: 100%;
+  background-color: rgb(178, 187, 191);
+}
+
+h1, p, label {
+  color: aliceblue;
+  font-family: 'Voces', cursive;
+}
+
+#title {
+  margin: 8%;
+  font-family: 'Elsie', cursive;
+  font-size: 50pt;
+  color: aliceblue;
+}
+
+#landing-box{
+  padding: 50px;
+  height: 400px;
+}
+
+.parallax { 
+  /* The image used */
+  background-image: url("../images/girl-bg.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.parallax2 { 
+  /* The image used */
+  background-image: url("../images/afro-cheerful-friendly.jpg");
+
+  /* Full height */
+  min-height:65%;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover, contain;
+}
+
+form.signup,
+form.login {
+  margin-top: 50px;
+}
+
+#footer-container {
+  width: auto;
+  max-width: 680px;
+  padding: 0 15px;
+}
+
+#black {
+  color: black !important;
+}
+
+/* Turn off parallax scrolling for all tablets and phones. Increase/decrease the pixels if needed */
+@media only screen and (max-device-width: 1366px) {
+  .parallax {
+    background-attachment: scroll;
+  }
+}
