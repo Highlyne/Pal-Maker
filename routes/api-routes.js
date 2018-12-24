@@ -21,6 +21,8 @@ module.exports = function(app) {
     // This variable will calculate the difference between the user"s scores and the scores of
     // each user in the database
     var totalDifference;
+   
+
     // Loop through all of the possible friends in the db.
       for(var i=0; i<data.length; i++){
         // Total difference is reset at the start of each loop
@@ -29,22 +31,23 @@ module.exports = function(app) {
         var placeHolder = data[i];
         // This will store the answers columns from the data objects in an array to work with.
         var placeHolderAnswerArray=[];
-        console.log("here is the very first answer to compare " + placeHolder.ans1);
-        console.log("here is the userAnswerArray " + userAnswerArray);
-        placeHolderAnswerArray.push(placeHolder.ans1);
-        placeHolderAnswerArray.push(placeHolder.ans2);
-        placeHolderAnswerArray.push(placeHolder.ans3);
-        placeHolderAnswerArray.push(placeHolder.ans4);
-        placeHolderAnswerArray.push(placeHolder.ans5);
-        for(var j=0; j<6; i++) {
+        placeHolderAnswerArray.push(data[i].ans1);
+        placeHolderAnswerArray.push(data[i].ans2);
+        placeHolderAnswerArray.push(data[i].ans3);
+        placeHolderAnswerArray.push(data[i].ans4);
+        placeHolderAnswerArray.push(data[i].ans5);
+        
+        for(var j=0; j<5; j++) {
           // Now we match up the current possible friend's score array with the user's score array.
           var possibleFriendScore = placeHolderAnswerArray[j];
           var userScore = userAnswerArray[j];
           // Returns the absolute value of the results of subtracting the two scores.  We want the abs
           // to ensure we are always working with a positive number.  Then we will add that value to the
           // totalDifference variable to get an overall sum.
-          totalDifference += Math.abs(parseInt(possibleFriendScore[i])- parseInt(userScore[j]));
-          console.log("here is total differnce " + totalDifference);
+          totalDifference += Math.abs(parseInt(possibleFriendScore)- parseInt(userScore));
+          console.log("here is total difference " + totalDifference);
+          console.log("here is the userAnswerArray " + userAnswerArray);
+          console.log("here is the placeHolderArray " + placeHolderAnswerArray);
         } 
         // We are looking for the friend with the lowest difference in score.  As we set the "Best Match" friend
          // we will continue to compare their score with the next possible friend to ensure we have the lowest
@@ -54,9 +57,9 @@ module.exports = function(app) {
           bestMatch.difference = totalDifference;
         }
       }
-      console.log("Here is the bestMatch " + bestMatch);
+      console.log("Here is the bestMatch " + JSON.stringify(bestMatch));
       
-      res.json(bestMatch);
+      // res.json(bestMatch);
     })
   });
 
