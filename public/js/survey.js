@@ -17,18 +17,38 @@ $(document).ready(function() {
     userAnswers.push($("#Q3").val());
     userAnswers.push($("#Q4").val());
     userAnswers.push($("#Q5").val());
-    userAnswers.push($("#Q6").val());
-    userAnswers.push($("#Q7").val());
-    userAnswers.push($("#Q8").val());
-    userAnswers.push($("#Q9").val());
-    userAnswers.push($("#Q10").val());
+    
 
     var userData = {
       photo: userPhoto,
       greeting: statement,
       results: userAnswers
+      // bestMatch: match
     }
     
     console.log("answers array " + JSON.stringify(userData));
+
+    $.post("api/submit", userData ,(function(data){
+    console.log("here is the data you are sending to the server " + userAnswers);
+    // Show results using modal.  Allow user to save answers
+    $("#match-name").text(data.name);
+    $("#match-message").text(data.photo);
+
+    // Show the modal with the best match
+    $("#myModal").modal("toggle");
+  })) 
+      
+  
   });
+
+  
+  function storeResults(userData) {
+    $.post("/api/submit", {
+     userData
+    }).then(function(data) {
+      window.location.replace(data);
+      // If there's an error, handle it by throwing up a bootstrap alert
+    }).catch(handleLoginErr);
+  }
+
 });

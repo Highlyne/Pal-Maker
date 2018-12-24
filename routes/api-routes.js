@@ -3,6 +3,85 @@ var db = require("../models");
 var passport = require("../config/passport");
 
 module.exports = function(app) {
+  // Route for handling survey data
+  // ================================================
+
+  app.post("/api/submit", function(req,res){
+    // Setup object to hold the "best match".
+    var bestMatch = {
+      name: "",
+      photo: "not available yet",
+      difference: Infinity
+    };
+    // Get user answers from the client side
+    var userAnswerArray = req.body.results;
+    console.log("Here is data from the client side " + JSON.stringify(userAnswerArray));
+    // Make a call to the DB to get all of the previous submissions
+    db.Result.findAll().then(function(data){
+    // This variable will calculate the difference between the user"s scores and the scores of
+    // each user in the database
+    var totalDifference;
+    // Loop through all of the possible friends in the db.
+      for(var i=0; i<data.length; i++){
+        // Total difference is reset at the start of each loop
+        totalDifference= 0;
+        // Each data object is set to the placeholder
+        var placeHolder = data[i];
+        // This will store the answers columns from the data objects in an array to work with.
+        var placeHolderAnswerArray=[];
+        console.log("here is the very first answer to compare " + placeHolder.ans1);
+        console.log("here is the userAnswerArray " + userAnswerArray);
+        placeHolderAnswerArray.push(placeHolder.ans1);
+        placeHolderAnswerArray.push(placeHolder.ans2);
+        placeHolderAnswerArray.push(placeHolder.ans3);
+        placeHolderAnswerArray.push(placeHolder.ans4);
+        placeHolderAnswerArray.push(placeHolder.ans5);
+        for(var j=0; j<6; i++) {
+          // Now we match up the current possible friend's score array with the user's score array.
+          var possibleFriendScore = placeHolderAnswerArray[j];
+          var userScore = userAnswerArray[j];
+          // Returns the absolute value of the results of subtracting the two scores.  We want the abs
+          // to ensure we are always working with a positive number.  Then we will add that value to the
+          // totalDifference variable to get an overall sum.
+          totalDifference += Math.abs(parseInt(possibleFriendScore[i])- parseInt(userScore[j]));
+          console.log("here is total differnce " + totalDifference);
+        } 
+        // We are looking for the friend with the lowest difference in score.  As we set the "Best Match" friend
+         // we will continue to compare their score with the next possible friend to ensure we have the lowest
+         // score difference.
+         if (totalDifference <= bestMatch.difference) {
+          bestMatch.name = placeHolder.id;
+          bestMatch.difference = totalDifference;
+        }
+      }
+      console.log("Here is the bestMatch " + bestMatch);
+      
+      res.json(bestMatch);
+    })
+  });
+
+  // app.post("/api/result", function(req, res) {
+  //   console.log(req.body);
+  //   db.Result.create({
+  //     photo: req.body.photo,
+  //     greeting: req.body.greeting,
+  //     ans1: req.body.results[0],
+  //     ans2: req.body.results[1],
+  //     ans3: req.body.results[2],
+  //     ans4: req.body.results[3],
+  //     ans5: req.body.results[4],
+  //     match: req.body.bestMatch,
+  //   }).then(function() {
+  //     res.redirect(307, "/results");
+  //   }).catch(function(err) {
+  //     console.log(err);
+  //     res.json(err);
+  //     // res.status(422).json(err.errors[0].message);
+  //   });
+  // });
+
+  // Routes for handling authentication
+  // ======================================================
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
@@ -53,5 +132,4 @@ module.exports = function(app) {
       });
     }
   });
-
 };
