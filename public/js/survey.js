@@ -46,7 +46,12 @@ $(document).ready(function () {
 
   });
 
-
+  $('#no-tryAgain').on('click', function(){
+    console.log("The try again function fires");
+  });
+  $('#yes-save').on('click', function(){
+    console.log("The save my stuff function fires");
+  });
   function storeResults(userData) {
     $.post("/api/submit", {
       userData
