@@ -59,7 +59,7 @@ module.exports = function(app) {
       }
       console.log("Here is the bestMatch " + JSON.stringify(bestMatch));
       
-      // res.json(bestMatch);
+      res.json(bestMatch);
     })
   });
 
